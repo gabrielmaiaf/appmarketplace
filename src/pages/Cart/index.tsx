@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import { View } from 'react-native';
@@ -38,25 +38,41 @@ interface Product {
 const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
 
+  const [values, setValues] = useState({
+    price: 0,
+    itens: 0,
+  });
+
   function handleIncrement(id: string): void {
-    // TODO
+    return increment(id);
   }
 
   function handleDecrement(id: string): void {
-    // TODO
+    return decrement(id);
   }
 
-  const cartTotal = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+  useEffect(() => {
+    let price = 0;
+    let itens = 0;
 
-    return formatValue(0);
+    products.forEach(product => {
+      price += product.price * product.quantity;
+      itens += product.quantity;
+    });
+
+    setValues({
+      price,
+      itens,
+    });
   }, [products]);
+
+  const cartTotal = useMemo(() => {
+    return formatValue(values.price);
+  }, [values.price]);
 
   const totalItensInCart = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
-
-    return 0;
-  }, [products]);
+    return values.itens;
+  }, [values.itens]);
 
   return (
     <Container>
